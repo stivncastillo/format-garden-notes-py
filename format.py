@@ -4,6 +4,7 @@ import shutil
 
 from slugify import slugify
 from datetime import date, datetime
+from colorama import Fore, Back, Style
 
 root_folder = '/Users/stiven/Obsidian/Garden'
 destination_folder = '/Users/stiven/Projects/Frontend/digital-garden/src/content/notes'
@@ -17,14 +18,14 @@ def rename_files_to_slug(source_folder, dest_folder):
     saved_date = last_update_file.readline()
     last_update_date = datetime.strptime(saved_date, "%Y-%m-%d").date()
 
-    print("Last update date:", last_update_date)
+    print(Fore.YELLOW + "Last update date:", last_update_date, Style.RESET_ALL)
+    print(Style.RESET_ALL)
 
     for root, dirnames, filenames in os.walk(source_folder):
         dirnames[:] = [d for d in dirnames if d not in files_to_exclude]
         for filename in filenames:
             if filename.endswith('.md'):
                 old_path = os.path.join(root, filename)
-                print("Formating file:", old_path)
                 with open(old_path) as reader:
                     content = reader.read()
                     # read frontmatter data
@@ -33,8 +34,7 @@ def rename_files_to_slug(source_folder, dest_folder):
                     updated_at = data["updatedAt"]
                     isPublished = data["published"]
 
-                    # if (updated_at >= last_update_date):
-                    if (isPublished):
+                    if (updated_at >= last_update_date and isPublished):
                         title = filename.replace('.md', '')
                         # slugify the file name
                         new_filename = slugify(title) + '.md'
@@ -48,10 +48,11 @@ def rename_files_to_slug(source_folder, dest_folder):
                         new_path = os.path.join(dest_folder, category, new_filename)
                         # copy the file to the new path
                         shutil.copy(old_path, new_path)
-                        # print("Created => ", new_path)
+                        print(Fore.GREEN + "Successfuly:", new_path)
     open('lastUpdate.txt', 'w').close()
     last_update_file.write(today.strftime('%Y-%m-%d'))
-    print("Writing date of last update:", today)
+    print(Style.RESET_ALL)
+    print(Fore.YELLOW + "Writing date of last update:", today)
     last_update_file.close()
 
 # Rename files to slug style
