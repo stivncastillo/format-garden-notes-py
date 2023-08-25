@@ -52,7 +52,7 @@ def rename_files_to_slug(source_folder, dest_folder):
     open('lastUpdate.txt', 'w').close()
     last_update_file.write(today.strftime('%Y-%m-%d'))
     print(Style.RESET_ALL)
-    print(Fore.YELLOW + "Writing date of last update:", today)
+    print(Fore.YELLOW + "Writing date of last update:", Back.WHITE + Fore.BLUE, today)
     last_update_file.close()
 
 # Rename files to slug style
